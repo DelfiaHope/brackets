@@ -1,73 +1,34 @@
-module.exports = function check(str, bracketsConfig) {
-  const OPEN_BRACKETS = ['(', '{' , '['];
-  const allBrackets = ['(', '{' , '[', ')', '}', ']']
-  const BRACKETS_PAIR = {
-    [')']: '(',
-    ['}']: '{',
-    [']']: '[',
-  }
-
-  function checkArray(bracketsConfig){
- 
-    let stack = [];
-    for (let i = 0; i < bracketsConfig.length; i ++) {
-      let newStr = bracketsConfig[i].join('')
-      for (let j = 0; j < newStr.length; j ++) {
-        let currentSymbol = newStr[j];
-        console.log(currentSymbol)
-         if(allBrackets.includes(currentSymbol)){
-            if (OPEN_BRACKETS.includes(currentSymbol)) {
-              stack.push(currentSymbol);
-            } else {
-              if (stack.length === 0) {
-                return false;
-              } 
-      
-              let topElement = stack[stack.length - 1];
-      
-              if (BRACKETS_PAIR[currentSymbol] === topElement) {
-                stack.pop();
-              } else {
-                return false;
-              }
-             }
-      }else{ j++}
-      }
-    }
-    return stack.length === 0
+module.exports =  function check(str, bracketsConfig) {
+  let stack = [];
+    for (let i = 0; i < str.length; i++) {
+    let curSym = str[i];
     
+    if (bracketsConfig.find(el => el[1] === curSym) && stack.length !== 0) {
+      
+      if (stack.length === 0) {
+        
+        return false;
+      }
+      let topElement = stack[stack.length - 1];
+      
+      bracketsConfig.forEach((el) => {
+        if (el[1] === curSym) {
+         
+          if (topElement === el[0]) {
+           
+            stack.pop();
+            
+          } else {
+              if (el[1] === el[0]) {
+                  stack.push(el[1])
+              }
+            return false;
+          }
+        }
+      })
+    } else {
+      stack.push(curSym);     
+    }
   }
-   function checkStr(str){
-    let stack = [];
-       for (let j = 0; j < str.length; j ++) {
-            let currentSymbol = str[j];
-            console.log(currentSymbol)
-            if(allBrackets.includes(currentSymbol)){
-                if (OPEN_BRACKETS.includes(currentSymbol)) {
-                  stack.push(currentSymbol);
-                } else {
-                  if (stack.length === 0) {
-                    return false;
-                  } 
-          
-                  let topElement = stack[stack.length - 1];
-          
-                  if (BRACKETS_PAIR[currentSymbol] === topElement) {
-                    stack.pop();
-                  } else {
-                    return false;
-                  }
-                }
-            }else{ j++}
-       }
-       return stack.length === 0
-  }
-  
-  if (checkStr(str) && checkArray(bracketsConfig)){
-    return true
-  } else{
-    return false
-  } 
-  
+  return stack.length === 0
 }
-
